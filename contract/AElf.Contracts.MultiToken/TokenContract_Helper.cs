@@ -24,7 +24,7 @@ namespace AElf.Contracts.MultiToken
                 "Invalid symbol.");
             Assert(amount > 0, "Invalid amount.");
             var tokenInfo = State.TokenInfos[symbol];
-            Assert(tokenInfo != null && tokenInfo != new TokenInfo(), "Token is not found.");
+            Assert(tokenInfo != null && !string.IsNullOrEmpty(tokenInfo.Symbol), $"Token is not found. {symbol}");
             return tokenInfo;
         }
         
@@ -83,7 +83,7 @@ namespace AElf.Contracts.MultiToken
             Assert(existing == null || existing.Equals(new TokenInfo()), "Token already exists.");
             Assert(!string.IsNullOrEmpty(tokenInfo.Symbol) & tokenInfo.Symbol.All(IsValidSymbolChar),
                 "Invalid symbol.");
-            Assert(!string.IsNullOrEmpty(tokenInfo.TokenName), "Invalid token name.");
+            Assert(!string.IsNullOrEmpty(tokenInfo.TokenName), $"Invalid token name. {tokenInfo.Symbol}");
             Assert(tokenInfo.TotalSupply > 0, "Invalid total supply.");
             Assert(tokenInfo.Issuer != null, "Invalid issuer address.");
             State.TokenInfos[tokenInfo.Symbol] = tokenInfo;
@@ -91,21 +91,21 @@ namespace AElf.Contracts.MultiToken
 
         private CrossChainContractContainer.CrossChainContractReferenceState GetValidCrossChainContractReferenceState()
         {
-            if (State.CrossChainContractReferenceState.Value == null)
-                State.CrossChainContractReferenceState.Value =
+            if (State.CrossChainContract.Value == null)
+                State.CrossChainContract.Value =
                     Context.GetContractAddressByName(SmartContractConstants.CrossChainContractSystemName);
-            return State.CrossChainContractReferenceState;
+            return State.CrossChainContract;
         }
         
-        private void CrossChainVerify(Hash transactionId, long parentChainHeight, int chainId, IEnumerable<Hash> merklePath)
+        private void CrossChainVerify(Hash transactionId, long parentChainHeight, int chainId, MerklePath merklePath)
         {
             var verificationInput = new VerifyTransactionInput
             {
                 TransactionId = transactionId,
                 ParentChainHeight = parentChainHeight,
-                VerifiedChainId = chainId
+                VerifiedChainId = chainId,
+                Path = merklePath
             };
-            verificationInput.Path.AddRange(merklePath);
             var verificationResult = GetValidCrossChainContractReferenceState().VerifyTransaction.Call(verificationInput);
             Assert(verificationResult.Value, "Cross chain verification failed.");
         }
