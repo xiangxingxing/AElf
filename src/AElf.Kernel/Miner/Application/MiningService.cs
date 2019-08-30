@@ -114,7 +114,8 @@ namespace AElf.Kernel.Miner.Application
                 await SignBlockAsync(block);
                 Logger.LogInformation($"Generated block: {block.ToDiagnosticString()}, " +
                                       $"previous: {block.Header.PreviousBlockHash}, " +
-                                      $"transactions: {block.Body.TransactionsCount}");
+                                      $"executed transactions: {block.Body.TransactionsCount}, " +
+                                      $"not executed transactions {transactions.Count + systemTransactions.Count - block.Body.TransactionsCount}");
                 return block;
             }
         }
