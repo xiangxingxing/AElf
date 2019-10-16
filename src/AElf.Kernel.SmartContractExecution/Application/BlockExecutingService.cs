@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -113,7 +112,7 @@ namespace AElf.Kernel.SmartContractExecution.Application
             blockHeader.MerkleTreeRootOfTransactionStatus =
                 CalculateTransactionStatusMerkleTreeRoot(blockExecutionReturnSet);
             
-            blockHeader.MerkleTreeRootOfTransactions = CalculateTransactionMerkleTreeRoot(allExecutedTransactionIds);
+            blockHeader.MerkleTreeRootOfTransactions = CalculateMerkleTreeRoot(allExecutedTransactionIds);
             
             var blockHash = blockHeader.GetHashWithoutCache();
             var blockBody = new BlockBody();
@@ -132,20 +131,10 @@ namespace AElf.Kernel.SmartContractExecution.Application
 
         private Hash CalculateWorldStateMerkleTreeRoot(BlockStateSet blockStateSet)
         {
-            Hash merkleTreeRootOfWorldState;
             var byteArrays = GetDeterministicByteArrays(blockStateSet);
-            using (var hashAlgorithm = SHA256.Create())
-            {
-                foreach (var bytes in byteArrays)
-                {
-                    hashAlgorithm.TransformBlock(bytes, 0, bytes.Length, null, 0);
-                }
+            var hashList = byteArrays.Select(Hash.FromRawBytes).ToList();
 
-                hashAlgorithm.TransformFinalBlock(new byte[0], 0, 0);
-                merkleTreeRootOfWorldState = Hash.FromByteArray(hashAlgorithm.Hash);
-            }
-
-            return merkleTreeRootOfWorldState;
+            return CalculateMerkleTreeRoot(hashList);
         }
         
         private IEnumerable<byte[]> GetDeterministicByteArrays(BlockStateSet blockStateSet)
@@ -168,12 +157,12 @@ namespace AElf.Kernel.SmartContractExecution.Application
                 nodes.Add(GetHashCombiningTransactionAndStatus(transactionId, status));
             }
 
-            return BinaryMerkleTree.FromLeafNodes(nodes).Root;
+            return CalculateMerkleTreeRoot(nodes);
         }
 
-        private Hash CalculateTransactionMerkleTreeRoot(IEnumerable<Hash> transactionIds)
+        private Hash CalculateMerkleTreeRoot(IEnumerable<Hash> nodes)
         {
-            return BinaryMerkleTree.FromLeafNodes(transactionIds).Root;
+            return BinaryMerkleTree.FromLeafNodes(nodes).Root;
         }
         
         private Hash GetHashCombiningTransactionAndStatus(Hash txId,

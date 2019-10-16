@@ -311,5 +311,33 @@ namespace AElf.Types.Tests
         }
         
         #endregion
+
+//        [Fact]
+//        public void Test()
+//        {
+//            string[] strings = 
+//            {
+//                "47f1db99b27269d9006cee06e366a9f799f86193e48e341cf7c64f450d867718",
+//                "3defa5818d89b23f69907bebe4ec85bd78f9dc672aa77b2bc69f893890619b53",
+//                "8d9aeec90b5a361a38eef2dd7c316edc210afd9ab0f4b0103ae7f7f038ff63cd",
+//                "68d7033c8bd66639067a7737761a137dfa0296cc7e6362bd0ac2b0a20d6f3e59",
+//                "215f915186c7ffe02416cc06972d2c99501db7abac9d71e3c3fe7ec56e7802c7",
+//                "dba39c79fe8a7293f9b3b3fb0e0091c9f9c04b086dd22a44b40d6f9cedccf82f",
+//                "8040ba8b4592a033c4943de22ea839d3fe998fe0a810f233dbd7792c2a77686f",
+//                "e9425d8f9114867c70bf2d4707d493e8fde328797cb5ae980d1815f95f5323ee",
+//                "a14984f5313e50924dc5f50713713b1da716a3f1ebf5da59b80cebf397f70502",
+//                "4ca0583bae669a7b93ec01fd842d79af535c974caa8d4e23bf210bddc3695299",
+//                "706ceb7e69ca4c00410db8a3677e157e738a17b781715c056f0ddca8a4b6b45b",
+//                "0df7ec936c807f3173a1db2e948ba26f1b87cc2535ab271b8d3443aeaf88f048",
+//                "1735e0d2b76343d56048c17badc143d9ed0a5fb52089f28fde4bbf034e9f353e",
+//                "e45f780242ea54108c994341dc8d245c0fbcee18aa552f79688b2858350252fe",
+//                "e0ea687fdfdbb699faaf9be9ffe8f9b66047aae128fdc9ab448fd5519dc911a2"
+//            };
+//
+//            var hashList = strings.Select(HashHelper.HexStringToHash).ToList();
+//            var root = BinaryMerkleTree.FromLeafNodes(hashList).Root;
+//            var toHex = root.ToHex();
+//            Assert.Equal("633321293076f5f2bf898c1fb41bcaa438cbf8949311dd60fb890c43f8b7d357", toHex);
+//        }
     }
 }
