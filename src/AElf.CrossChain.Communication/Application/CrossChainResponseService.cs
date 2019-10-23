@@ -81,8 +81,7 @@ namespace AElf.CrossChain.Communication.Application
                 : CrossChainExtraData.Parser.ParseFrom(crossChainExtraByteString);
             parentChainBlockData.CrossChainExtraData = crossChainExtra;
 
-            parentChainBlockData.ExtraData.Add(GetExtraDataForExchange(blockHeader,
-                new[] {"Consensus"}));
+            parentChainBlockData.ExtraData.Add(GetExtraDataForExchange(blockHeader, "Consensus"));
             return parentChainBlockData;
         }
         
@@ -121,7 +120,7 @@ namespace AElf.CrossChain.Communication.Application
             return _blockExtraDataService.GetExtraDataFromBlockHeader(symbol, header);
         }
         
-        private Dictionary<string, ByteString> GetExtraDataForExchange(BlockHeader header, IEnumerable<string> symbolsOfExchangedExtraData)
+        private Dictionary<string, ByteString> GetExtraDataForExchange(BlockHeader header, params string[] symbolsOfExchangedExtraData)
         {
             var res = new Dictionary<string, ByteString>();
             foreach (var symbol in symbolsOfExchangedExtraData)
