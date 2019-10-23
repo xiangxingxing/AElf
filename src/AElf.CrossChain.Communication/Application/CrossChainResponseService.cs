@@ -81,7 +81,11 @@ namespace AElf.CrossChain.Communication.Application
                 : CrossChainExtraData.Parser.ParseFrom(crossChainExtraByteString);
             parentChainBlockData.CrossChainExtraData = crossChainExtra;
 
-            parentChainBlockData.ExtraData.Add(GetExtraDataForExchange(blockHeader, "Consensus"));
+            if (parentChainBlockData.Height % CrossChainCommunicationConstants.MaximalIndexingCount == 0)
+            {
+                parentChainBlockData.ExtraData.Add(GetExtraDataForExchange(blockHeader, "Consensus"));
+            }
+            
             return parentChainBlockData;
         }
         
